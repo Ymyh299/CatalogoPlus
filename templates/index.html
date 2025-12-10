@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo+</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* body e mais */
+        body {
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        @font-face {
+            font-family: 'Chetta';
+            src: url("../static/fonts/chettavissto/ChettaVissto.woff");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Agenda';
+            src: url("../static/fonts/agenda/agenda-light.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Agenda Bold';
+            src: url("../static/fonts/agenda/agenda-bold.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Agenda Light';
+            src: url("../static/fonts/agenda/agenda-light.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /*  MAIN  */
+
+        main {
+            height: 100vh;
+            background-image: url("../static/images/background.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+
+
+        /* HEADER */
+
+        .tit {
+            font-family: 'Chetta';
+            font-size: 30px;
+            margin: 0;
+            margin-left: 10px;
+            color: rgb(60, 60, 60);
+            margin-top: 0px;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 40px;
+            padding-top: 7px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid rgb(60, 60, 60);
+            backdrop-filter: blur(6px);
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        header i {
+            color: rgb(60, 60, 60);
+            font-size: 25px;
+            margin: 0px 10px 0px 10px;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .titulo p {
+            margin-left: 30px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-family: 'Agenda';
+            font-size: 25px;
+            color: rgb(60, 60, 60);
+        }
+
+
+        /* FORM */
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* CARROSSEL */
+
+
+        .carousel-wrapper {
+            width: 100%;
+            max-width: 270px;
+            overflow: hidden;
+            margin: auto;
+            border-radius: 12px;
+            cursor: grab;
+        }
+
+        .carousel-wrapper:active {
+            cursor: grabbing;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+
+        .carousel img {
+            width: 100%;
+            flex-shrink: 0;
+            user-select: none;
+            pointer-events: none;
+            object-fit: contain;
+        }
+
+        .indicators {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .indicators div {
+            width: 10px;
+            height: 10px;
+            background: #aaa;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .indicators .active {
+            background: #333;
+            width: 12px;
+            height: 12px;
+        }
+
+
+
+        .escolher {
+            font-size: 20px;
+            font-family: 'Agenda';
+            font-weight: 700;
+            color: white;
+            border: none;
+            background-color: rgba(40, 40, 40, 0.5);
+            width: 50%;
+            margin-top: 0px;
+            border-radius: 20px;
+            padding-top: 7px;
+            padding-bottom: 7px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <main>
+        <header>
+
+            <p class="tit">Catálogo+</p>
+            <i class="fa-regular fa-house"></i>
+        </header>
+
+        <div class="container">
+            <div class="titulo">
+                <p>Layouts</p>
+            </div>
+
+            <div class="carousel-wrapper" id="carouselWrapper">
+                <div class="carousel" id="carousel">
+                    <img src="/static/layouts/img1.png" alt="Layout 1" data-name="img1.png">
+                    <img src="/static/layouts/img2.png" alt="Layout 2" data-name="img2.png">
+                    <img src="/static/layouts/img3.png" alt="Layout 3" data-name="img3.png">
+                </div>
+            </div>
+
+            <div class="indicators" id="indicators"></div>
+
+            <form action="/painel" method="POST">
+                <input type="hidden" name="layout_escolhido" id="layout-input">
+                <button class="escolher" type="submit">Usar este layout</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const carouselWrapper = document.getElementById("carouselWrapper");
+        const carousel = document.getElementById("carousel");
+        const slides = carousel.querySelectorAll("img");
+        const indicatorsContainer = document.getElementById("indicators");
+        const layoutInput = document.getElementById("layout-input");
+
+        let index = 0;
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let carouselWidth = carouselWrapper.offsetWidth;
+
+        // Atualizar largura quando a janela for redimensionada
+        window.addEventListener('resize', () => {
+            carouselWidth = carouselWrapper.offsetWidth;
+            updatePosition();
+        });
+
+        // Criar indicadores
+        slides.forEach((_, i) => {
+            const dot = document.createElement("div");
+            if (i === 0) dot.classList.add("active");
+            indicatorsContainer.appendChild(dot);
+        });
+
+        function updateIndicators() {
+            indicatorsContainer.querySelectorAll("div").forEach((dot, i) => {
+                dot.classList.toggle("active", i === index);
+            });
+        }
+
+        function updatePosition() {
+            const translateX = -index * carouselWidth;
+            carousel.style.transform = `translateX(${translateX}px)`;
+
+            // Capturar o nome do arquivo do slide atual
+            const currentSlide = slides[index];
+            const layoutName = currentSlide.getAttribute('data-name');
+
+            // Se não tiver data-name, extrai do src
+            if (!layoutName) {
+                const src = currentSlide.src;
+                layoutName = src.substring(src.lastIndexOf('/') + 1);
+            }
+
+            layoutInput.value = layoutName;
+            updateIndicators();
+
+            // Debug (opcional)
+            console.log("Layout selecionado:", layoutName);
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            currentX = startX;
+            carousel.style.transition = 'none';
+            e.preventDefault();
+        }
+
+        function duringDrag(e) {
+            if (!isDragging) return;
+
+            currentX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const diff = currentX - startX;
+            const resistance = 0.5;
+            const dragOffset = diff * resistance;
+
+            carousel.style.transform = `translateX(calc(-${index * 100}% + ${dragOffset}px))`;
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+
+            isDragging = false;
+            carousel.style.transition = "transform 0.3s ease";
+
+            const diff = currentX - startX;
+            const threshold = carouselWidth * 0.15;
+
+            if (Math.abs(diff) > threshold) {
+                if (diff < 0) {
+                    index = (index + 1) % slides.length;
+                } else if (diff > 0) {
+                    index = (index - 1 + slides.length) % slides.length;
+                }
+            }
+
+            updatePosition();
+        }
+
+        // Inicializar
+        updatePosition();
+
+        // Eventos de mouse
+        carouselWrapper.addEventListener("mousedown", startDrag);
+        document.addEventListener("mousemove", duringDrag);
+        document.addEventListener("mouseup", endDrag);
+
+        // Eventos de touch
+        carouselWrapper.addEventListener("touchstart", startDrag, { passive: false });
+        document.addEventListener("touchmove", duringDrag, { passive: false });
+        document.addEventListener("touchend", endDrag);
+
+        // Prevenir drag padrão das imagens
+        slides.forEach(img => {
+            img.addEventListener("dragstart", e => e.preventDefault());
+        });
+
+        // Evento para quando o formulário for enviado (opcional)
+        document.querySelector('form').addEventListener('submit', function (e) {
+            // Verifica se algum layout foi selecionado
+            if (!layoutInput.value) {
+                e.preventDefault();
+                alert('Por favor, selecione um layout!');
+            } else {
+                console.log('Enviando layout:', layoutInput.value);
+            }
+        });
+    </script>
+</body>
+
+</html>

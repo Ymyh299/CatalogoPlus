@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo+</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* body e mais */
+        body {
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        @font-face {
+            font-family: 'Chetta';
+            src: url("../static/fonts/chettavissto/ChettaVissto.woff");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Agenda';
+            src: url("../static/fonts/agenda/agenda-light.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Agenda Bold';
+            src: url("../static/fonts/agenda/agenda-bold.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Agenda Light';
+            src: url("../static/fonts/agenda/agenda-light.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /*  MAIN  */
+
+        main {
+            height: 100vh;
+            background-image: url("../static/images/background.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+
+
+        /* HEADER */
+
+        .tit {
+            font-family: 'Chetta';
+            font-size: 30px;
+            margin: 0;
+            color: rgb(60, 60, 60);
+            margin-top: 0px;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 40px;
+            padding-top: 7px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid rgb(60, 60, 60);
+            backdrop-filter: blur(6px);
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        header a {
+            text-decoration: none;
+            color: rgb(60, 60, 60);
+            font-size: 25px;
+            margin: 0px 10px 0px 10px;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            height: 60%;
+        }
+
+        .titulo p {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-family: 'Agenda Bold';
+            font-size: 20px;
+            color: rgb(60, 60, 60);
+        }
+
+
+        /* PDF CONTAINER */
+
+        .pdf-container {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            border: solid rgb(60, 60, 60) 1px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* HEADER PDF */
+
+        .header-pdf {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3%;
+        }
+
+        .header-pdf span {
+            font-family: 'Agenda';
+        }
+
+        .header-pdf button {
+            border: none;
+            background-color: transparent;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* PDF */
+
+        .pdf-visualizer {
+            height: 100%;
+            display: block;
+            aspect-ratio: 9 / 16;
+        }
+
+        iframe {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+        <header>
+            <a href="/opcoes" class="fa-solid fa-arrow-left"></a>
+            <p class="tit">Catálogo+</p>
+            <a href="/" class="fa-regular fa-house"></a>
+        </header>
+
+        <div class="container">
+            <div class="titulo">
+                <p>Visualizar</p>
+            </div>
+
+            <div class="pdf-container">
+                <div class="header-pdf">
+                    <span>PDF Ana Gonçalves</span>
+                    <button>Baixar</button>
+                </div>
+
+                <div class="pdf-visualizer">
+                    <iframe src="/static/images/Ana Goncalves.pdf"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+</body>
+
+</html>
