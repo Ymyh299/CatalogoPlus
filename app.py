@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, flash, request, send_file, jsonify
+import json
 from functools import wraps
 from werkzeug.security import check_password_hash
 import mysql.connector
@@ -14,7 +15,7 @@ app.secret_key = "anag25000"
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "QualquerUma123",
+    "password": "QualquerUma123",   
     "database": "catalogoplus"
 }
 
@@ -86,6 +87,7 @@ def index():
 @app.route("/visualizar")
 @login_required
 def visualizar():
+
     return render_template("visualizer.html", usuario=session["usuario"])
 
 
@@ -99,25 +101,21 @@ def foto(ref):
 
 
 
-@app.route('/painel')
+@app.route('/painel', methods=["GET", "POST"])
 @login_required
 def painel():
     layout_escolhido = request.form.get('layout_escolhido')
-    # layout_escolhido será "img1.png", "layout-moderno", etc.
     print(f"Layout escolhido: {layout_escolhido}")
-    
-    # Salvar no banco de dados ou sessão
     session['layout_escolhido'] = layout_escolhido
-    
     return render_template("painel.html", usuario=session["usuario"])
 
 
 
-@app.route("/opcoes")
-@login_required
-def options():
-    
-    return render_template("option.html", usuario=session["usuario"])
+@app.route("/opcoes", methods=["POST"])
+def opcoes():
+    session['referencias'] = request.form.get("referencias")
+    return render_template("option.html")
+
 
 
 
@@ -139,82 +137,26 @@ def executar_indesign():
         return False
     
 
-@app.route("/criarplanilha", methods=["POST"])
-def criar_planilha():
-    referencias_texto = request.form.get("referencia")
+@app.route("/gerar_planilha", methods=["POST"])
+def gerar_planilha():
+    dados_json = request.form.get("dados_json")
+    dados = json.loads(dados_json)
+    layout = session.get("layout_escolhido")
+    referencias = session.get("referencias")
 
-    if not referencias_texto:
-        return jsonify({"erro": "Nenhuma referência informada."}), 400
+    # monta planilha
+    df = pd.DataFrame([{
+        "layout": layout,
+        "referencias": referencias,
+        **dados
+    }])
 
-    referencias = referencias_texto.strip().split()
+    # salva o XLSX
+    df.to_excel("resultado.xlsx", index=False)
 
-    conn = mysql.connector.connect(**DB_CONFIG)
-    cursor = conn.cursor()
+    # (Opcional) gerar PDF aqui também
 
-    query = """
-        SELECT name, price, promotional, price_promotional
-        FROM products
-        WHERE code = %s
-    """
-
-    dados = []
-
-    for ref in referencias:
-        cursor.execute(query, (ref,))
-        result = cursor.fetchone()
-
-        if result:
-            name, price, promotional, price_promotional = result
-            
-            if promotional == 1:
-                real = "R$"
-                traco = "\\"
-                de_ou_por = "DE:"
-                por = "POR:"
-            else:
-                real = ""
-                traco = ""
-                de_ou_por = "POR:"
-                por = ""
-                price_promotional = ""
-
-            foto_path = rf"Z:\\FOTOS\fotos_PDF\ref\{ref}.jpg"
-
-            dados.append({
-                "Referência": ref,
-                "Nome": name,
-                "De/Por": de_ou_por,
-                "Preço Original": price,
-                "Traço": traco,
-                "Real": real,
-                "Preço Promocional": price_promotional,
-                "Por": por,
-                "@Fotos": foto_path
-            })
-
-    cursor.close()
-    conn.close()
-    
-
-    if not dados:
-        return jsonify({"erro": "Nenhuma referência encontrada."}), 404
-
-    # 💾 Gera CSV compatível com InDesign
-    df = pd.DataFrame(dados)
-    df.to_csv(CSV_PATH, index=False, sep=",", encoding="UTF-16")
-
-    # 🚀 Executa o InDesign automaticamente
-    sucesso = executar_indesign()
-
-    if sucesso:
-        time.sleep(10)
-        return jsonify({
-            "mensagem": "✅ Planilha gerada e InDesign executado com sucesso!",
-            "quantidade": len(dados),
-            "arquivo_csv": CSV_PATH
-        })
-    else:
-        return jsonify({"erro": "Falha ao executar o InDesign."}), 500
+    return redirect(url_for("visualizar"))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

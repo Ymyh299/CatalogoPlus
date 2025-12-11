@@ -867,8 +867,9 @@
         <div class="popup-div">
             <h3>Nome do Arquivo</h3>
 
-            <form id="form-arquivo">
+            <form id="form-arquivo" action="/criarplanilha" method="post">
                 <input type="text" id="nome-arquivo" required>
+                <input type="hidden" name="dados_json" id="dados-json">
 
                 <div class="buttons">
                     <button type="button" onclick="fecharPopup()">Cancelar</button>
@@ -910,7 +911,7 @@
             refdiv: document.querySelector('.referencia'),
             precodiv: document.querySelector('.preco-container'),
             compdiv: document.querySelector('.imgexemple-inf'),
-            
+
             // Popup
             popup: document.getElementById('popup'),
             formArquivo: document.getElementById('form-arquivo'),
@@ -1114,10 +1115,10 @@
         });
 
         elementos.formArquivo.addEventListener('submit', function (e) {
-            e.preventDefault();
 
             if (!elementos.inputNomeArquivo.value.trim()) {
                 alert('Digite um nome para o arquivo');
+                e.preventDefault();
                 return;
             }
 
@@ -1135,9 +1136,7 @@
                 sublogoescolhida: elementos.selectSublogo.value
             };
 
-            console.log('DADOS PARA SALVAR:', dadosParaSalvar);
-            alert(`Arquivo "${dadosParaSalvar.nomeArquivo}" salvo!\nVerifique o console (F12).`);
-            fecharPopup();
+            document.getElementById("dados-json").value = JSON.stringify(dadosParaSalvar);
         });
 
         document.querySelector('#form-arquivo button[type="button"]').addEventListener('click', fecharPopup);
